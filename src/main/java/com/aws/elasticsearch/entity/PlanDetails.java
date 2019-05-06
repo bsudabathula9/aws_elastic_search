@@ -1,4 +1,4 @@
-package com.deltadental.platform.elastic.entity;
+package com.aws.elasticsearch.entity;
 
 
 

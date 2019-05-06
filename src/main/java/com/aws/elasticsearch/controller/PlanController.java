@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
@@ -21,8 +22,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.aws.elasticsearch.config.MethodExecutionTime;
 import com.aws.elasticsearch.dto.SearchResponseDetails;
+import com.aws.elasticsearch.entity.PlanDetails;
 import com.aws.elasticsearch.service.IPlanService;
-import com.deltadental.platform.elastic.entity.PlanDetails;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -108,16 +109,19 @@ public class PlanController {
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "Successfully uploaded plandetails content", response = Boolean.class),
 			@ApiResponse(code = 500, message = "Internal Error", response = PlanController.class) })
-	@RequestMapping(value = "/plans", method = RequestMethod.POST, headers = "Accept=application/json")
+	@RequestMapping(value = "/plans/upload", method = RequestMethod.POST, headers = "Accept=application/json")
 	@ResponseBody
 	@MethodExecutionTime
-	public ResponseEntity<Object> uploadContentFromExcelFile(@RequestParam("file") MultipartFile contentExcelFile) {
+	public ResponseEntity<Object> uploadPlansData(@ApiParam(value = "queryText") @RequestParam(name = "File Path", required = true) String filePath) {
 
 		ResponseEntity<Object> responseEntity = null;
 
 		try {
+
+           
+			JobParameters jobParameters =  new JobParametersBuilder().addParameter("filePath",
+					new JobParameter(filePath)).toJobParameters();
 			
-			JobParameters jobParameters =  new JobParametersBuilder().addLong("time",System.currentTimeMillis()).toJobParameters();
 			JobExecution execution = jobLauncher.run(readDataFromFile, jobParameters);
 			logger.info("Exit Status : " + execution.getStatus());
 			responseEntity = new ResponseEntity<>("Successfully uploaded plans information", HttpStatus.OK);

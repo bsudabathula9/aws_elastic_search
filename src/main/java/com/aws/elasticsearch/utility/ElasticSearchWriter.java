@@ -6,8 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.aws.elasticsearch.entity.PlanDetails;
 import com.aws.elasticsearch.serviceImpl.PlanService;
-import com.deltadental.platform.elastic.entity.PlanDetails;
 
 @Component
 public class ElasticSearchWriter implements ItemWriter<PlanDetails> {

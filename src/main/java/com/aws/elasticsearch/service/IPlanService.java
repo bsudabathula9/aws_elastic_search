@@ -3,7 +3,7 @@ package com.aws.elasticsearch.service;
 import java.util.List;
 
 import com.aws.elasticsearch.dto.SearchResponseDetails;
-import com.deltadental.platform.elastic.entity.PlanDetails;
+import com.aws.elasticsearch.entity.PlanDetails;
 
 public interface IPlanService {
 

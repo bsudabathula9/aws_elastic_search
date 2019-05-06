@@ -20,7 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.aws.elasticsearch.constants.PlanConstants;
 import com.aws.elasticsearch.constants.QueryConstants;
-import com.deltadental.platform.elastic.entity.PlanDetails;
+import com.aws.elasticsearch.entity.PlanDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 

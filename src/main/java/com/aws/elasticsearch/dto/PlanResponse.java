@@ -1,6 +1,6 @@
 package com.aws.elasticsearch.dto;
 
-import com.deltadental.platform.elastic.entity.PlanDetails;
+import com.aws.elasticsearch.entity.PlanDetails;
 
 public class PlanResponse {
 	

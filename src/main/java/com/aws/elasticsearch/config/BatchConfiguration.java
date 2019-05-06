@@ -3,9 +3,9 @@ package com.aws.elasticsearch.config;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.DefaultBatchConfigurer;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
@@ -22,8 +22,8 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 
+import com.aws.elasticsearch.entity.PlanDetails;
 import com.aws.elasticsearch.utility.ElasticSearchWriter;
-import com.deltadental.platform.elastic.entity.PlanDetails;
 
 @Configuration
 @EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
@@ -40,9 +40,8 @@ public class BatchConfiguration extends DefaultBatchConfigurer{
 	@Autowired
 	ElasticSearchWriter elasticSearchwriter;
 	
-	@Value("${input.file.loc}")
-	private String fileLoc;
-
+	 private static final String OVERRIDDEN_BY_EXPRESSION = null;
+	
 
 	@Bean
 	public Job uploadDataToES() {
@@ -64,16 +63,18 @@ public class BatchConfiguration extends DefaultBatchConfigurer{
 	@Bean
 	public Step uploadStep() {
 		return stepBuilderFactory.get("uploadStep").<Object, PlanDetails>chunk(1000)
-				.reader(csvReader())
+				.reader(csvReader(OVERRIDDEN_BY_EXPRESSION))
 				.writer(elasticSearchwriter)
 				.taskExecutor(taskExecutor())
 				.build();
 	}
 
-	private FlatFileItemReader<PlanDetails> csvReader() {
+	@Bean
+	@StepScope
+	public FlatFileItemReader<PlanDetails> csvReader(@Value("#{jobParameters[filePath]}") String filePath) {
 		FlatFileItemReader<PlanDetails> reader = new FlatFileItemReader<>();
-
-		reader.setResource(new FileSystemResource(fileLoc));
+		
+		reader.setResource(new FileSystemResource(filePath));
 		reader.setLinesToSkip(1);  
 
 		reader.setLineMapper(new DefaultLineMapper<PlanDetails>() {

@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 
 import com.aws.elasticsearch.dto.PlanResponse;
 import com.aws.elasticsearch.dto.SearchResponseDetails;
+import com.aws.elasticsearch.entity.PlanDetails;
 import com.aws.elasticsearch.repo.PlanRepository;
 import com.aws.elasticsearch.service.IPlanService;
-import com.deltadental.platform.elastic.entity.PlanDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
